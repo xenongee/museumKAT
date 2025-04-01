@@ -1,0 +1,89 @@
+{% if current_user.has_role('admin') %}
+    {% set roleName = 'Администратор' %}
+{% elif current_user.has_role('redactor')%}
+    {% set roleName = 'Редактор' %}
+{% endif %}
+
+<header>
+  {% if current_user.has_role('admin') or current_user.has_role('redactor') %}
+  <div class="fixed-top navbar-notification">
+    <div class="container">
+      <div class="row align-items-center text-white">
+        <div class="col-auto justify-content-start marq1uee" data-direction="right" data-duplicated="true">Вы зашли за
+          {{ roleName | lower }}а</div>
+        <div class="col-auto flex-grow-1 "><a href="/adminpanel">Войти в
+            панель</a></div>
+        {# data-toggle="modal" data-target="#LoginModalCenter" #}
+        <div class="col-auto d-flex justify-content-end"><a href="/logout">Выйти</a></div>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+  <nav class="navbar navbar-default navbar-expand-md fixed-top navbar-light bg-white con-shadow">
+    <div class="container">
+      <a class="navbar-brand" href="{{ url_for('index_page') }}">
+        <img src="{{ url_for('static', filename='images/svg/logo.svg') }}"
+          alt="Музей профессионального образования КАТ">
+      </a>
+      <button class="navbar-toggler" id="navbarToggler" type="button" data-toggle="collapse"
+        data-target="#navbarButtons" aria-controls="navbarButtons" aria-expanded="false" aria-label="Открыть меню">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="navbar-collapse collapse" id="navbarButtons">
+        <ul class="nav navbar-nav ml-auto">
+          <li class="nav-item {% if activeButtonState == 1 %}active{% endif %}">
+            <a class="nav-link" href="{{ url_for('index_page') }}">Главная</a>
+          </li>
+          <li class="nav-item dropdown {% if activeButtonState == 2 %}active{% endif %}">
+            <a class="nav-link dropdown-toggle nav-stend dropdown-pc" href="{{ url_for('museumstands.stands_index') }}">
+              Стенды
+            </a>
+            <a class="nav-link dropdown-toggle nav-stend dropdown-mobile" href="{{ url_for('museumstands.stands_index') }}" data-toggle="dropdown"
+              aria-haspopup="true" aria-expanded="false">
+              Стенды
+            </a>
+            <div class="dropdown-menu dropdown-menu-nav dropdown-menu-right" aria-labelledby="navbarDropdown">
+              {% for i in range(standsMenu|length) if not i >= 8 %}
+                    <a class="dropdown-item" href="{{ url_for('museumstands.stand_page', slug=standsMenu[i].slug) }}">{{ standsMenu[i].title }}</a>
+              {% endfor %}
+              <a class="dropdown-item dropdown-mobile" href="{{ url_for('museumstands.stands_index') }}">Открыть раздел "Стенды"</a>
+              
+            </div>
+          </li>
+          <li class="nav-item {% if activeButtonState == 3 %}active{% endif %}">
+            <a class="nav-link" href="{{ url_for('about_page') }}">О музее</a>
+          </li>
+          <li class="nav-item dropdown {% if activeButtonState == 4 %}active{% endif %}">
+            <a class="nav-link dropdown-toggle nav-stend dropdown" href="" data-toggle="dropdown"
+              aria-haspopup="true" aria-expanded="false">
+              <i class="fas fa-info-circle"></i>
+            </a>
+            <div class="dropdown-menu dropdown-menu-nav dropdown-menu-right" aria-labelledby="navbarDropdown">
+              <span class="dropdown-header">Поиск по сайту</i></span>
+              <form class="input-group p-3" action="/search" method="get">
+                <input class="form-control" id="searchForm" type="text" autocomplete="off" placeholder="Поиск..." name="q" value="{{ request.args.get('q', '') }}">
+                <div class="input-group-append">
+                  <button class="btn btn-outline-primary" type="submit"><i class="fas fa-search pr-2"></i>Найти</button>
+                </div>
+              </form>            
+              {% if current_user.has_role('admin') or current_user.has_role('redactor') %}  
+                <div class="dropdown-divider"></div>
+                <span class="dropdown-header">Создание новых страниц</span>
+                <div class="btn-group" role="group" aria-label="articleCreateButtons">
+                  <a class="btn btn-primary btn-sm" href="{{ url_for('article.create_article') }}" role="button">Новая статья</a>
+                  <a class="btn btn-primary btn-sm" href="{{ url_for('museumstands.create_stand') }}" role="button">Новый стeнд</a>
+                </div>
+              {% else %}
+                <div class="dropdown-divider"></div>
+                <span class="dropdown-header">Вход для сотрудников музея</span>
+                <a class="dropdown-item" href="/login"><i class="fas fa-sign-in-alt pr-2"></i>Авторизоваться</a>
+                <!-- <a class="dropdown-item" href="#" data-toggle="modal" data-target="#LoginModalCenter"><i class="fas fa-sign-in-alt pr-2"></i>Авторизоваться</a> -->
+              {% endif %}
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+</header>

@@ -1,0 +1,19 @@
+<section class="jumbotron-section">
+    <div class="jumbotronBg-overlay">
+        <div class="jumbotron-bg"></div>
+    </div>
+    <div class="jumbotron cover d-flex align-items-end">
+        <div class="container text-black">
+            {% if pageName %}
+            <h1 class="display-4 brickword">{{ pageName }}</h1>
+            {% endif %}
+            {#<p>{% if time %}{{ time }}, {% endif %}{% if date %}{{ date }} - {% endif %}{% if author %}Автор:
+                {{ author }}{% endif %}</p>#}
+            {% if article and (current_user.has_role('admin') or current_user.has_role('redactor')) %}
+                <a class="btn btn-primary btn-sm" href="{{ url_for('article.edit_article', slug=slug) }}"><i class="fas fa-edit pr-2"></i>Изменить страницу</a>
+            {% elif stand and (current_user.has_role('admin') or current_user.has_role('redactor')) %}
+                <a class="btn btn-primary btn-sm" href="{{ url_for('museumstands.edit_stand', slug=slug) }}"><i class="fas fa-edit pr-2"></i>Изменить стенд</a>
+            {% endif %}
+        </div>
+    </div>
+</section>

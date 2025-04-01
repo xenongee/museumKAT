@@ -1,0 +1,11 @@
+{% extends 'layout/page.html' %}
+
+
+{% set pageName = article.title %}
+{% set jumbotron_img_url = article.img_url %}
+
+{% set contents = article.content %}
+
+{% block content %}
+  {{ section.set_article(contents) }}
+{% endblock content %}

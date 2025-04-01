@@ -1,0 +1,271 @@
+{# Макросы для блока секция в страничке #}
+{# 
+    Задать статью (для новостей, стендов и прочих страниц, где требуется какая-либо текстовая информация) 
+    set_article(contents) --> (Заголовок, содержание статьи)
+#}
+{% macro set_article(contents) %}
+<article>
+    <div class="container pb-5 d-flex justify-content-center">
+        <div class="col-md-12 p-0 text">
+            {% if contents %}
+            {{ contents | safe }}
+            {% endif %}
+        </div>
+    </div>
+</article>
+{% endmacro %}
+
+{# 
+    Задать новостную карточку (в разработке) 
+    set_newscard(articles, paginate) --> (Подготовленный лист статей из базы данных)
+#}
+{% macro set_newscard(articles, paginate) %}
+<section>
+    <div class="container pb-5 d-flex justify-content-center">
+        <div class="col-md-12 p-0">
+            <h1 class="my-4 brickword">Новости музея</h1>
+            <div class="row">
+                {% for article in articles %}
+                <div class="col-lg-6 mb-4" data-tilt="">
+                    <div class="card card-news"
+                        {% if article.img_url %}style="background: linear-gradient(0deg, rgba(0, 0, 0, 0.88), rgba(0, 0, 0, 0.22)), url('{{ url_for('static', filename=article.img_url) }}') no-repeat center center; background-size: auto, auto; background-size: cover;"
+                        {% endif %}>
+                        <a
+                            href="{% if article.slug %}{{ url_for('article.article_index', slug=article.slug) }}{% else %}#{% endif %}">
+                            <div class="card-img-overlay d-flex flex-column justify-content-end text-light">
+                                <h4 class="card-title">{{ article.title }}</h4>
+                                <p class="card-text text-overflow">{{ article.content }}... <span
+                                        class="badge badge-secondary">Нажмите, чтобы прочитать</span></p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <ul class="pagination justify-content-center pt-5">
+                <li class="page-item {% if not paginate.has_prev %}disabled{% endif %}"> <a class="page-link "
+                        href="./?page={{ paginate.prev_num }}" aria-label="Previous">Предыдущая</a>
+                </li>
+                {% for page in paginate.iter_pages() %}
+                <li class="page-item {% if page == paginate.page %}active_page{% endif %}"> <a class="page-link"
+                        href="./?page={{ page}}">{{ page}}</a></li>
+                {% endfor %}
+                <li class="page-item {% if not paginate.has_next %}disabled{% endif %}"> <a class="page-link"
+                        href="./?page={{ paginate.next_num }}">Следующая</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</section>
+{% endmacro %}
+
+{# 
+    Задать карточку со стендом (Подхватывается заголовок и часть информации для подзаголовка, перед этим также очищается от HTML тэгов и сортируется по id) 
+    set_standcard(stands) --> (Подготовленный лист со стендами из базы данных)
+#}
+{% macro set_standcard(stands, paginate) %}
+<section class="showcase">
+    <div class="container-fluid p-0">
+        <div class="row no-gutters">
+            {% for stand in stands %}
+            <div class="col-lg-6 my-auto showcase-item showcase-text text-white showcase-img"
+                {% if stand.img_url %}style="background: linear-gradient(0deg, rgba(0, 0, 0, 0.88), rgba(0, 0, 0, 0.22)), 
+                url(' {{ url_for('static', filename=stand.img_url) }} ') no-repeat center center; background-size: 100%, 100%;"
+                {% endif %}>
+                <a href="{{ url_for('museumstands.stand_page', slug=stand.slug) }}">
+                    <h2>{{ stand.title }}</h2>
+                    <p class="lead mb-0 text-overflow">{{ stand.content }}</p>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    <ul class="pagination justify-content-center m-5">
+        <li class="page-item {% if not paginate.has_prev %}disabled{% endif %}"> <a class="page-link "
+                href="./?page={{ paginate.prev_num }}" aria-label="Previous">Предыдущая</a>
+        </li>
+        {% for page in paginate.iter_pages() %}
+        <li class="page-item {% if page == paginate.page %}active_page{% endif %}"> <a class="page-link"
+                href="./?page={{ page}}">{{ page}}</a></li>
+        {% endfor %}
+        <li class="page-item {% if not paginate.has_next %}disabled{% endif %}"> <a class="page-link"
+                href="./?page={{ paginate.next_num }}">Следующая</a>
+        </li>
+    </ul>
+</section>
+{% endmacro %}
+
+{# 
+    Задать карточки из результата поиска
+    set_searchcard(searchResult) --> (Подготовленный лист со стендами и статьями из базы данных)
+#}
+{% macro set_searchcard(searchResult) %}
+<section>
+    <div class="container pb-5 d-flex justify-content-center">
+        <div class="col-md-12 p-0">
+            <div class="row">
+                {% for res in searchResult %}
+                <!-- кол-во постов -->
+                <div class="col-lg-6 mb-4" data-tilt="">
+                    <div class="card card-news"
+                        {% if res.img_url %}style="background: linear-gradient(0deg, rgba(0, 0, 0, 0.88), rgba(0, 0, 0, 0.22)), url('{{ url_for('static', filename=res.img_url) }}') no-repeat center center; background-size: auto, auto; background-size: cover;"
+                        {% endif %}>
+                        <a href="   {% if res.slug and res.stand_id %}
+                                        {{ url_for('museumstands.stand_page', slug=res.slug) }}
+                                    {% elif res.slug and res.article_id %}
+                                        {{ url_for('article.article_index', slug=res.slug) }}
+                                    {% else %}
+                                        #
+                                    {% endif %}">
+                            <div class="card-img-overlay d-flex flex-column justify-content-end text-light">
+                                <h4 class="card-title">{{ res.title }} <br> <span class="badge badge-primary">
+                                        {% if res.article_id %}
+                                        Статья
+                                        {% elif res.stand_id %}
+                                        Стенд
+                                        {% endif %}
+                                    </span></h4>
+                                <p class="card-text text-overflow">
+                                    {{ res.content }}...
+                                    <span class="badge badge-secondary">Читать дальше</span>
+                                </p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endmacro %}
+
+{#
+    Создать новое содержание страницы
+    createContent(form, type) --> (Объект формы для заполнения данными, тип создоваемой страницы - статья или стэнд)
+#}
+{% macro  createContent(form, type, create) %}
+<form
+    action="{% if type == 'article'%}{{ url_for('article.create_article') }}{% elif type == 'stand' %}{{ url_for('museumstands.create_stand') }}{% endif %}"
+    method="POST" id="formContent">
+    <section class="jumbotron-section">
+        <div class="jumbotronBg-overlay">
+            <div class="jumbotron-bg"></div>
+        </div>
+        <div class="jumbotron cover d-flex align-items-end">
+            <div class="container text-black">
+                <div data-toggle="tooltip" data-placement="top" title="Нажмите сюда, чтобы задать заголовок статьи">
+                    {{ form.title(class='form-control display-4 brickword editor-header p-0', placeholder='Заголовок...',) }}
+                </div>
+                <p>{% if time %}{{ time }}, {% endif %}{% if date %}{{ date }} - {% endif %}{% if author %}Автор:
+                    {{ author }}{% endif %}</p>
+                {#<div class="input-group">
+                    <div class="collapse card" style="width: 100%;" id="collapseImageLoader">
+                        <div class="card-header">
+                            <span class="input-text">Загрузить изображения:</span>
+                        </div>
+                        <div class="card-body">
+                            <div class="custom-file" data-toggle="tooltip" data-placement="bottom" data-html="true"
+                                title="Нажмите сюда, чтобы выбрать фоновое изображение из вашего компьюетра. <u>Данное изображение сохранится на сервере</u>, после чего вы можете их повторно использовать нажав на кнопку <b>Выбрать из сервера</b>">
+                                <input type="file" class="custom-file-input" id="inputGroupFile">
+                                <label class="custom-file-label" for="inputGroupFile"><i
+                                        class="fas fa-desktop pr-2"></i>
+                                    Выбрать из компьютера</label>
+                            </div>
+                            <button class="btn btn-secondary mt-3" type="button" data-toggle="tooltip"
+                                data-placement="right"
+                                title="Нажмите сюда, если вы хотите выбрать фоновое изображение, которое было загружено на сервере ранее"
+                                disabled><i class="fas fa-server pr-2"></i> Выбрать из сервера</button>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-primary mt-3 btn-sm" data-toggle="collapse"
+                        data-target="#collapseImageLoader"><i class="fas fa-image pr-2"></i> Выбрать фоновое
+                        изображение <span class="badge badge-warning"> Этот компонент не работает</span></button>
+                </div>#}
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <div class="container pb-4 d-flex justify-content-center">
+            {{ form.content() }}
+        </div>
+        <div class="container d-flex justify-content-center">
+            <p>Статья не может быть меньше 300 символов</p>
+        </div>
+        <div class="container pb-3 d-flex justify-content-center">
+            <button class="btn btn-primary m-2" type="submit" id="btnSubmit">Создать</button>
+            <a class="btn btn-secondary m-2"
+                href="{% if type == 'article'%}{{ url_for('index_page') }}{% elif type == 'stand' %}{{ url_for('museumstands.stands_index') }}{% endif %}"
+                role="button">Отмена</a>
+        </div>
+    </section>
+</form>
+{% endmacro %}
+{#
+    Изменить существующее содержание страницы
+    updateContent(form, type) --> (Объект формы для заполнения данными, тип создоваемой страницы - статья или стэнд)
+#}
+{% macro  updateContent(form, type, update, slug) %}
+<form
+    action="{% if type == 'article' %}
+                {{ url_for('article.edit_article', slug=slug) }}
+            {% elif type == 'stand' %}
+                {{ url_for('museumstands.edit_stand', slug=slug) }}
+            {% endif %}"
+    method="POST" id="formContent">
+    <section class="jumbotron-section">
+        <div class="jumbotronBg-overlay">
+            <div class="jumbotron-bg"></div>
+        </div>
+        <div class="jumbotron cover d-flex align-items-end">
+            <div class="container text-black">
+                <div data-toggle="tooltip" data-placement="top" title="Нажмите сюда, чтобы задать заголовок статьи">
+                    {{ form.title(class='form-control display-4 brickword editor-header p-0', placeholder='Заголовок...',) }}
+                </div>
+                <p>{% if time %}{{ time }}, {% endif %}{% if date %}{{ date }} - {% endif %}{% if author %}Автор: {{ author }}{% endif %} slug: {{ slug }}</p>
+                {#
+                <div class="input-group">
+                    <div class="collapse card" style="width: 100%;" id="collapseImageLoader">
+                        <div class="card-header">
+                            <span class="input-text">Загрузить изображения:</span>
+                        </div>
+                        <div class="card-body">
+                            <div class="custom-file" data-toggle="tooltip" data-placement="bottom" data-html="true"
+                                title="Нажмите сюда, чтобы выбрать фоновое изображение из вашего компьюетра. <u>Данное изображение сохранится на сервере</u>, после чего вы можете их повторно использовать нажав на кнопку <b>Выбрать из сервера</b>">
+                                <input type="file" class="custom-file-input" id="inputGroupFile">
+                                <label class="custom-file-label" for="inputGroupFile"><i
+                                        class="fas fa-desktop pr-2"></i>
+                                    Выбрать из компьютера</label>
+                            </div>
+                            <button class="btn btn-secondary mt-3" type="button" data-toggle="tooltip"
+                                data-placement="right"
+                                title="Нажмите сюда, если вы хотите выбрать фоновое изображение, которое было загружено на сервере ранее"
+                                disabled><i class="fas fa-server pr-2"></i> Выбрать из сервера</button>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-primary mt-3 btn-sm" data-toggle="collapse"
+                        data-target="#collapseImageLoader"><i class="fas fa-image pr-2"></i> Выбрать фоновое
+                        изображение <!-- <span class="badge badge-warning"> Этот компонент не работает</span> --></button>
+                </div>
+                #}
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <div class="container pb-4 d-flex justify-content-center">
+            {{ form.content() }}
+        </div>
+        <div class="container d-flex justify-content-center">
+            <p>Статья не может быть меньше 300 символов!</p>
+        </div>
+        <div class="container pb-3 d-flex justify-content-center">
+            <button class="btn btn-primary m-2" type="submit" id="btnSubmit">{% if update %}Изменить{% endif %}</button>
+            <a class="btn btn-secondary m-2"
+                href="{% if type == 'article'%}{{ url_for('index_page') }}{% elif type == 'stand' %}{{ url_for('museumstands.stands_index') }}{% endif %}"
+                role="button">Отмена</a>
+        </div>
+    </section>
+</form>
+{% endmacro %}

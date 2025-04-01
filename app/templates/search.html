@@ -1,0 +1,9 @@
+{% extends 'layout/page.html' %}
+
+{% block content %}
+    {% if notfound %}
+        {{ section.set_article(contents) }}
+    {% else %}
+        {{ section.set_searchcard(searchResult) }} 
+    {% endif %}
+{% endblock content %}

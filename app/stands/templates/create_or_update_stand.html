@@ -1,0 +1,12 @@
+{% extends 'layout/page.html' %}
+
+{% set creatingContent = True %}
+{% set imageName = 'BigBoss' %}
+
+{% block new_content %}
+    {% if create %}
+        {{ section.createContent(form, 'stand', create) }}
+    {% elif update %}
+        {{ section.updateContent(form, 'stand', update, slug) }}
+    {% endif %}
+{% endblock new_content %}

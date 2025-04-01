@@ -1,0 +1,17 @@
+{% extends 'admin/master.html' %}
+
+{% if current_user.has_role('admin') %}
+{% set roleName = 'Администратор' %}
+{% elif current_user.has_role('redactor')%}
+{% set roleName = 'Редактор' %}
+{% endif %}
+
+{% block body %}
+{{ super() }}
+{% if current_user.has_role('admin') %}
+    <h1>Добро пожаловать, {{roleName}}.</h1>
+{% else %}
+    <h1>Добро пожаловать, {{ current_user.fullname }} ({{roleName}}).</h1>
+{% endif %}
+
+{% endblock %}

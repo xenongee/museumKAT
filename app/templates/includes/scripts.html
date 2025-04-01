@@ -1,0 +1,113 @@
+<!-- frameworks -->
+<script src="{{ url_for('static', filename='frameworks/jquery/jquery-3.4.1.slim.js') }}"></script>
+<script src="{{ url_for('static', filename='frameworks/bootstrap/js/bootstrap.min.js') }}"></script>
+<script src="{{ url_for('static', filename='frameworks/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+<script src="{{ url_for('static', filename='frameworks/smartphoto/smartphoto.min.js') }}"></script>
+
+<!-- assets -->
+<script src="{{ url_for('static', filename='js/preloader.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/dropdown_hover.jquery.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/jumbotron-parallax.jquery.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/tilt.jquery.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/mousewheel.jquery.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+
+<script>
+    $("[data-tilt]").tilt({
+        maxTilt: 2
+    })
+    $(document).ready((function () {
+        new SmartPhoto(".sphoto")
+        $(".smartphoto-nav ul").mousewheel((function (s, o) {
+            this.scrollLeft -= 90 * o, s.preventDefault()
+        }))
+    }))
+</script>
+
+{% if creatingContent == True %}
+<script type="text/javascript" src="{{ url_for('static', filename='frameworks/tinymce/tinymce.min.js') }}"></script>
+<script type="text/javascript">
+    tinymce.init({
+        selector: '#content',
+        language: 'ru',
+        skin: 'CUSTOM',
+        min_height: 700,
+        plugins: [
+            'advlist autolink link image imagetools lists charmap print preview hr anchor pagebreak spellchecker',
+            'searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking',
+            'save table contextmenu directionality template paste textcolor codesample'
+        ],
+        menu: {
+            file: {
+                title: 'File',
+                items: 'newdocument restoredraft | preview | print '
+            },
+            edit: {
+                title: 'Edit',
+                items: 'undo redo | cut copy paste | selectall | searchreplace'
+            },
+            view: {
+                title: 'View',
+                items: 'code | visualaid visualchars visualblocks | preview fullscreen'
+            },
+            insert: {
+                title: 'Insert',
+                items: 'image link media template codesample inserttable | charmap emoticons hr | pagebreak nonbreaking anchor toc | insertdatetime'
+            },
+            format: {
+                title: 'Format',
+                items: 'bold italic underline strikethrough superscript subscript codeformat | formats blockformats fontformats fontsizes align | forecolor backcolor | removeformat'
+            },
+            tools: {
+                title: 'Tools',
+                items: 'code wordcount'
+            },
+            table: {
+                title: 'Table',
+                items: 'inserttable | cell row column | tableprops deletetable'
+            }
+        },
+        imagetools_toolbar: "rotateleft rotateright | flipv fliph | editimage imageoptions",
+        toolbar: 'undo redo | fontsizeselect | bold italic underline strikethrough | forecolor backcolor removeformat | bullist numlist | outdent indent | alignleft aligncenter alignright alignjustify | styleselect | paste copy cut selectall | table | pagebreak | link template image media | code visualblocks preview',
+        toolbar_mode: 'sliding',
+        contextmenu: "cut copy paste | selectall | inserttable | cell row column | tableprops deletetable | link",
+        // images_upload_url: {# {{ url_for('post.imageuploader') }} #}'',
+        automatic_uploads: true,
+        images_reuse_filename: false,
+        images_upload_base_path: '/static/uploads',
+        codesample_languages: [{
+                text: 'HTML/XML',
+                value: 'markup'
+            },
+            {
+                text: 'JavaScript',
+                value: 'javascript'
+            },
+            {
+                text: 'CSS',
+                value: 'css'
+            },
+            {
+                text: 'Processing',
+                value: 'processing'
+            },
+            {
+                text: 'Python',
+                value: 'python'
+            }
+        ],
+        width: "100%",
+        templates: [{
+            title: 'Изображение',
+            description: '',
+            content: '<div class="container"><a class="sphoto" href="http://lorempixel.com/800/600/" data-caption="Изображение" data-id="image_article" data-group="article"><img class="sectionImage" style="display: block; margin-left: auto; margin-right: auto;" src="http://lorempixel.com/800/600/" alt=""></a></div>'
+        }],
+        setup: function (editor) {
+            editor.on('keydown', function () {
+                checkForm()
+            });
+        }
+    });
+</script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/checkForm.min.js') }}"></script>
+{% endif %}

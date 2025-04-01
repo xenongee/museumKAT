@@ -1,0 +1,31 @@
+{% import 'includes/section.html' as section %}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+  {% include 'includes/head.html' %}
+</head>
+
+<body>
+  {% include 'includes/preloader.html' %}
+  {% include 'includes/header.html' %}
+  <main>
+    {% if creatingContent == True %}
+      {% block new_content %}
+        
+      {% endblock new_content %}
+    {% else %}
+      {% include 'includes/jumbotron.html' %}
+      
+      {% block content %}
+      
+      {% endblock content %}
+    {% endif %}
+  </main>
+  {% include 'includes/footer.html' %}
+  {% include 'includes/modal.html' %}
+  {% include 'includes/scripts.html' %}
+</body>
+
+</html>

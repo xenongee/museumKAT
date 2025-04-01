@@ -1,0 +1,305 @@
+<!-- Flask-Admin -->
+{% import 'admin/layout.html' as layout with context -%}
+{% extends 'admin/base.html' %}
+
+{% block head_tail %}
+<!-- favicon -->
+<link rel="apple-touch-icon" sizes="57x57"
+    href="{{ url_for('static', filename='images/favicons/apple-icon-57x57.png') }}">
+<link rel="apple-touch-icon" sizes="60x60"
+    href="{{ url_for('static', filename='images/favicons/apple-icon-60x60.png') }}">
+<link rel="apple-touch-icon" sizes="72x72"
+    href="{{ url_for('static', filename='images/favicons/apple-icon-72x72.png') }}">
+<link rel="apple-touch-icon" sizes="76x76"
+    href="{{ url_for('static', filename='images/favicons/apple-icon-76x76.png') }}">
+<link rel="apple-touch-icon" sizes="114x114"
+    href="{{ url_for('static', filename='images/favicons/apple-icon-114x114.png') }}">
+<link rel="apple-touch-icon" sizes="120x120"
+    href="{{ url_for('static', filename='images/favicons/apple-icon-120x120.png') }}">
+<link rel="apple-touch-icon" sizes="144x144"
+    href="{{ url_for('static', filename='images/favicons/apple-icon-144x144.png') }}">
+<link rel="apple-touch-icon" sizes="152x152"
+    href="{{ url_for('static', filename='images/favicons/apple-icon-152x152.png') }}">
+<link rel="apple-touch-icon" sizes="180x180"
+    href="{{ url_for('static', filename='images/favicons/apple-icon-180x180.png') }}">
+<link rel="icon" type="image/png" sizes="192x192"
+    href="{{ url_for('static', filename='images/favicons/android-icon-192x192.png') }}">
+<link rel="icon" type="image/png" sizes="32x32"
+    href="{{ url_for('static', filename='images/favicons/favicon-32x32.png') }}">
+<link rel="icon" type="image/png" sizes="96x96"
+    href="{{ url_for('static', filename='images/favicons/favicon-96x96.png') }}">
+<link rel="icon" type="image/png" sizes="16x16"
+    href="{{ url_for('static', filename='images/favicons/favicon-16x16.png') }}">
+<link rel="manifest" href="{{ url_for('static', filename='images/favicons/manifest.json') }}">
+<meta name="msapplication-TileColor" content="#ffffff">
+<meta name="msapplication-TileImage" content="{{ url_for('static', filename='images/favicons/ms-icon-144x144.png') }}">
+<meta name="theme-color" content="#ffffff">
+
+<style>
+    .navbar-brand {
+        height: auto;
+    }
+
+    .brand-img img {
+        width: 35%;
+    }
+
+    .navbar-brand {
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    .admin-form {
+        margin-top: 2rem;
+    }
+
+    /* preloader screen */
+    .preloader {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background-color: #fff;
+        z-index: 9999;
+        overflow: hidden;
+        pointer-events: none;
+    }
+
+    .preloader .loader {
+        color: #000;
+        font-family: 'Roboto', sans-serif;
+        font-weight: 200;
+        font-size: 23px;
+    }
+
+    .preloader .loader span::after {
+        content: '.';
+        animation: dots 2s linear infinite;
+    }
+
+    .ok {
+        opacity: 0;
+        -webkit-transition: opacity 4s ease-out;
+        -moz-transition: opacity 4s ease-out;
+        -ms-transition: opacity 4s ease-out;
+        -o-transition: opacity 4s ease-out;
+        transition: opacity 4s ease-out;
+    }
+
+    .ok .loader {
+        opacity: 0;
+        -webkit-transition: opacity .5s ease-out;
+        -moz-transition: opacity .5s ease-out;
+        -ms-transition: opacity .5s ease-out;
+        -o-transition: opacity .5s ease-out;
+        transition: opacity .5s ease-out;
+    }
+
+    .nonok {
+        visibility: hidden;
+    }
+
+    .d-flex {
+        display: -ms-flexbox !important;
+        display: flex !important;
+    }
+
+    .flex-column {
+        -ms-flex-direction: column !important;
+        flex-direction: column !important;
+    }
+
+    .justify-content-center {
+        -ms-flex-pack: center !important;
+        justify-content: center !important;
+    }
+
+    .text-center {
+        text-align: center !important;
+    }
+
+    /* keyframes */
+    @keyframes dots {
+
+        0%,
+        20% {
+            content: ".";
+        }
+
+        40% {
+            content: "..";
+        }
+
+        60% {
+            content: "...";
+        }
+
+        90%,
+        100% {
+            content: "";
+        }
+    }
+</style>
+{% endblock %}
+
+{% block page_body %}
+<div class="preloader preloader-enable d-flex flex-column justify-content-center">
+    <div class="loader text-center">Сайт загружается. Пожалуйста, подождите<span></span></div>
+</div>
+<header>
+    <nav class="navbar navbar-default navbar-fixed-top">
+        <div class="container">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                    data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand brand-img" href="{{ url_for('index_page') }}">
+                    <img src="{{ url_for('static', filename='images/svg/logo.svg') }}"
+                        alt="Музей профессионального образования КАТ">
+                </a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    {{ layout.menu() }}
+                    {{ layout.menu_links() }}
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                            aria-expanded="false"><span class="glyphicon glyphicon-info-sign"></span><span
+                                class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{{ url_for('index_page') }}">Вернуться на сайт</a></li>
+                            <li><a href="/logout">Выйти из аккаунта</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div><!-- /.navbar-collapse -->
+        </div><!-- /.container-fluid -->
+    </nav>
+
+
+</header>
+
+<div class="container" style="transform: translateY(60px);">
+    <div class="row">
+        <div class="col-md-12">
+            <div id="contents" class="row" style="margin: 2rem !important;">
+                {% block brand %}
+                <h2 id="brand">{{ admin_view.name|capitalize }}</h2>
+                {% endblock %}
+
+                {{ layout.messages() }}
+
+                {% set render_ctx = h.resolve_ctx() %}
+                <div>
+                    {% block body %}
+                    {% endblock %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block tail_js %}
+{{ super() }}
+<script src="{{ url_for('static', filename='js/dropdown_hover.jquery.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/preloader.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='frameworks/tinymce/tinymce.min.js') }}"></script>
+<script type="text/javascript">
+    tinymce.init({
+        selector: '#content',
+        language: 'ru',
+        skin: 'CUSTOM',
+        min_height: 700,
+        plugins: [
+            'advlist autolink link image imagetools lists charmap print preview hr anchor pagebreak spellchecker',
+            'searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking',
+            'save table contextmenu directionality template paste textcolor codesample'
+        ],
+        menu: {
+            file: {
+                title: 'File',
+                items: 'newdocument restoredraft | preview | print '
+            },
+            edit: {
+                title: 'Edit',
+                items: 'undo redo | cut copy paste | selectall | searchreplace'
+            },
+            view: {
+                title: 'View',
+                items: 'code | visualaid visualchars visualblocks | preview fullscreen'
+            },
+            insert: {
+                title: 'Insert',
+                items: 'image link media template codesample inserttable | charmap emoticons hr | pagebreak nonbreaking anchor toc | insertdatetime'
+            },
+            format: {
+                title: 'Format',
+                items: 'bold italic underline strikethrough superscript subscript codeformat | formats blockformats fontformats fontsizes align | forecolor backcolor | removeformat'
+            },
+            tools: {
+                title: 'Tools',
+                items: 'code wordcount'
+            },
+            table: {
+                title: 'Table',
+                items: 'inserttable | cell row column | tableprops deletetable'
+            }
+        },
+        imagetools_toolbar: "rotateleft rotateright | flipv fliph | editimage imageoptions",
+        toolbar: 'undo redo | fontsizeselect | bold italic underline strikethrough | forecolor backcolor removeformat | bullist numlist | outdent indent | alignleft aligncenter alignright alignjustify | styleselect | paste copy cut selectall | table | pagebreak | link template image media | code visualblocks preview',
+        toolbar_mode: 'sliding',
+        contextmenu: "cut copy paste | selectall | inserttable | cell row column | tableprops deletetable | link",
+        // images_upload_url: {# {{ url_for('post.imageuploader') }} #}'',
+        automatic_uploads: true,
+        images_reuse_filename: false,
+        images_upload_base_path: '/static/uploads',
+        codesample_languages: [{
+                text: 'HTML/XML',
+                value: 'markup'
+            },
+            {
+                text: 'JavaScript',
+                value: 'javascript'
+            },
+            {
+                text: 'CSS',
+                value: 'css'
+            },
+            {
+                text: 'Processing',
+                value: 'processing'
+            },
+            {
+                text: 'Python',
+                value: 'python'
+            }
+        ],
+        width: "100%",
+        templates: [{
+            title: 'Изображение',
+            description: '',
+            content: '<div class="container"><a class="sphoto" href="http://lorempixel.com/800/600/" data-caption="Изображение" data-id="image_article" data-group="article"><img class="sectionImage" style="display: block; margin-left: auto; margin-right: auto;" src="http://lorempixel.com/800/600/" alt=""></a></div>'
+        }],
+        setup: function (editor) {
+            editor.on('keydown', function () {
+                checkForm();
+            });
+            editor.on('input mouseenter mouseleave mousemove', function () {
+                editor.save();
+            });
+        }
+    });
+</script>
+<script src="{{ url_for('static', filename='frameworks/jquery/jquery-3.4.1.slim.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/checkForm.min.js') }}"></script>
+{% endblock tail_js %}

@@ -1,0 +1,8 @@
+{% extends 'layout/page.html' %}
+
+{% set creatingContent = True %}
+{% set imageName = 'BigBoss' %}
+
+{% block new_content %}
+    {{ section.createContent(form, 'article') }}
+{% endblock new_content %}

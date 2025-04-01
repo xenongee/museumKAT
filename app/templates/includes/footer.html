@@ -1,0 +1,42 @@
+<footer class="footer con-shadow">
+    <div class="container py-4">
+        <div class="row">
+            <div class="col-md-3 footer-logo">
+                <img src="{{ url_for('static', filename='images/svg/logo.svg') }}" width="160" height="70" alt="">
+            </div>
+            <div class="col-md-3 footer-item">
+                <h4>Меню</h4>
+                <div class="small">
+                    <ul>
+                        <li class="footer-link"><a href="{{ url_for('index_page') }}">Главная</a></li>
+                        <li class="footer-link"><a href="{{ url_for('museumstands.stands_index') }}">Стенды</a></li>
+                        <li class="footer-link"><a href="{{ url_for('about_page') }}">О музее</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <h4>Информация</h4>
+                <div class="small">
+                    Этот сайт (дизайн и приложение) является диплопным проектом, разработанным студентом группы ИП-41 Рублев Глеб</p>
+                </div>
+                <!-- Разработал xenongee -->
+                <!-- Ссылки на меня: -->
+                <!-- https://xnngee.github.io/ -->
+                <!-- https://vk.com/xenongee -->
+                <p class="mb-0 mt-2 small mono abberation-shadow">
+                    <a class="text-decoration-none" href="https://xnngee.github.io/" target="_blank">designed by <img class="xglogo" alt="xenongee" title="xenongee" src="{{ url_for('static', filename='images/xg_logos/xg-logo.png') }}"></a>
+                </p>
+            </div>
+            <div class="col-md-3">
+                <h4>Контакты</h4>
+                <div class="small">
+                    <p>610005 г. Киров, Октябрьский проспект, д.97 <br>Руководитель музея В. А. Садовников.</p>
+                </div>
+            </div>
+        </div>
+        <hr class="footer-hr my-4">
+        <div class="row">
+            <div class="col-md-12 small">КОГПОБУ "Кировский авиационный техникум"<br>Copyright © 2020</div>
+        </div>
+    </div>
+</footer>
